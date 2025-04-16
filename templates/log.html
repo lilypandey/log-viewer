@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Log Viewer</title>
+    
+</head>
+<body>
+    <h2>Live Logs</h2>
+    <div id="log"></div>
+
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <script>
+        const socket = io();
+        const logBox = document.getElementById("log");
+        let lines = [];
+
+        socket.on("log_update", function(data) {
+            data.lines.forEach((line) => {
+                lines.push(line.trim());
+                if (lines.length > 10) {
+                    lines = lines.slice(-10);
+                }
+            });
+            logBox.innerText = lines.join("\n");
+        });
+    </script>
+
+</body>
+</html>
