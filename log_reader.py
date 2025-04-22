@@ -21,15 +21,32 @@ class LogWatcher:
             f.seek(0, 2)
             filesize = f.tell()
             block_size = 1024
-            blocks = []
+            buffer = b''
+            lines = []
 
-            while  filesize>0 and len(self.queue) < self.buffer_size:
-                f.seek(max(filesize - block_size,0))
-                data = f.read(block_size)
-                blocks.append(data)
-                lines = b''.join(reversed(blocks)).decode(errors='ignore').splitlines()
-                self.queue = deque(lines[-self.buffer_size:], maxlen=self.buffer_size)
-            f.seek(0,2)
+            while filesize > 0 and len(lines) < self.buffer_size:
+                read_size = min(block_size, filesize)
+                f.seek(filesize - read_size)
+                buffer_chunk = f.read(read_size) + buffer
+                filesize -= read_size
+
+                lines_found = buffer_chunk.splitlines()
+
+                if filesize > 0 and len(lines_found) > 0:
+                    buffer = lines_found[0]
+                    lines_found = lines_found[1:]
+                else:
+                    buffer = b''
+
+                lines_found.reverse()
+                for line in lines_found:
+                    lines.append(line.decode(errors='ignore').strip())
+                    if len(lines) >= self.buffer_size:
+                        break
+
+            lines = lines[::-1]
+            self.queue.extend(lines[-self.buffer_size:])
+            f.seek(0, 2)
             self.last_position = f.tell()
 
     def _watch_log_file(self):
@@ -41,8 +58,7 @@ class LogWatcher:
                 if new_lines:
                     new_lines = [line.strip() for line in new_lines if line.strip()]
                     with self.lock:
-                        for line in new_lines:
-                            self.queue.append(line)
+                        self.queue.extend(new_lines)
                         for callback in self.clients:
                             callback(new_lines)
                 self.last_position = f.tell()

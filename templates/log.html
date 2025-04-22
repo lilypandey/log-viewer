@@ -13,14 +13,14 @@
         const socket = io();
         const logBox = document.getElementById("log");
         let lines = [];
-
+    
         socket.on("log_update", function(data) {
-            data.lines.forEach((line) => {
-                lines.push(line.trim());
-                if (lines.length > 10) {
-                    lines = lines.slice(-10);
-                }
-            });
+            if (lines.length === 0) {  // Initial snapshot
+                lines = data.lines.slice(-10);
+            } else {  // Append new lines
+                lines.push(...data.lines);
+                //lines = lines.slice(-10);
+            }
             logBox.innerText = lines.join("\n");
         });
     </script>
