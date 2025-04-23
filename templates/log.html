@@ -15,12 +15,12 @@
         let lines = [];
     
         socket.on("log_update", function(data) {
-            if (lines.length === 0) {  // Initial snapshot
-                lines = data.lines.slice(-10);
-            } else {  // Append new lines
-                lines.push(...data.lines);
-                //lines = lines.slice(-10);
-            }
+            data.lines.forEach((line) => {
+                lines.push(line.trim()); // Always add to array
+                if (lines.length > 10) {
+                    lines = lines.slice(-10); // Trim later
+                }
+            });
             logBox.innerText = lines.join("\n");
         });
     </script>
