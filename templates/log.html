@@ -16,10 +16,8 @@
     
         socket.on("log_update", function(data) {
             data.lines.forEach((line) => {
-                lines.push(line.trim()); // Always add to array
-                if (lines.length > 10) {
-                    lines = lines.slice(-10); // Trim later
-                }
+                lines.push(line.trim());
+                
             });
             logBox.innerText = lines.join("\n");
         });
