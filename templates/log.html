@@ -1,8 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Live Log Viewer</title>
-    
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e2f;
+            color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Header styling */
+        h2 {
+            margin-top: 20px;
+            font-size: 2rem;
+            color: #00ffcc;
+        }
+
+        /* Log container styling */
+        #log {
+            background-color: #2e2e3e;
+            width: 90%;
+            max-width: 1000px;
+            height: 70vh;
+            margin: 20px auto;
+            padding: 15px;
+            border-radius: 10px;
+            overflow-y: scroll;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        /* Scrollbar styling */
+        #log::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        #log::-webkit-scrollbar-track {
+            background: #2e2e3e;
+            border-radius: 10px;
+        }
+
+        #log::-webkit-scrollbar-thumb {
+            background-color: #00ffcc;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
     <h2>Live Logs</h2>
@@ -17,11 +69,10 @@
         socket.on("log_update", function(data) {
             data.lines.forEach((line) => {
                 lines.push(line.trim());
-                
             });
             logBox.innerText = lines.join("\n");
+            logBox.scrollTop = logBox.scrollHeight; // auto scroll to bottom
         });
     </script>
-
 </body>
 </html>
