@@ -16,4 +16,6 @@ A lightweight tool to stream updates from a log file (like `tail -f`) to a web-b
 2. When updates occur, the server emits the new lines via WebSocket.
 3. The client receives updates without page refresh.
 
+
+
 ![UI-0](images/img0.png)
