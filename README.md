@@ -7,11 +7,13 @@ A lightweight tool to stream updates from a log file (like `tail -f`) to a web-b
 - Real-time streaming of new log lines
 - Displays last 10 lines on initial page load
 - Auto-scrolls on updates
-- Handles multiple concurrent clients
-- Optimized for large log files (append-only)
+- Handles concurrent clients
+- Optimized for large log files
 
 ## How It Works
 
 1. A Flask server reads and monitors the log file for changes.
 2. When updates occur, the server emits the new lines via WebSocket.
 3. The client receives updates without page refresh.
+
+![UI-0](images/img0.png)
